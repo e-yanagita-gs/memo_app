@@ -1,0 +1,14 @@
+<form action="/memos/<%= @id %>" method="post">
+<input type="hidden" name="_method" value="patch">
+  <div class="mb-3">
+    <label for="title" class="form-label">タイトル</label>
+    <input type="text" id="title" name="title" class="form-control  bg-light" style="height: 60px;" value="<%= @title %>">
+  </div>
+  <div class="mb-3">
+    <label for="content" class="form-label">内容</label>
+    <textarea id="content" name="content" class="form-control bg-light" style="height: 150px;"><%= @content %></textarea>
+  </div>
+  <div style="text-align: center; margin-top: 50px;">
+    <input type="submit" value="変更" class="btn btn-secondary" style="width: 100px;">
+  </div>
+</form>
