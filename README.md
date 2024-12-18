@@ -17,7 +17,6 @@ $ bundle install
 ```sh
 $ bundle exec ruby memoapp.rb
 ```
-4. ブラウザ
 
 ## 使用方法
 アプリの基本的な使い方を説明します。
