@@ -9,6 +9,12 @@ require 'sanitize'
 
 FILE_PATH = 'public/memos.json'
 
+helpers do
+  def h(text)
+    Rack::Utils.escape_html(text)
+  end
+end
+
 def get_memos(file_path)
   File.open(file_path) { |f| JSON.parse(f.read) }
 end
@@ -55,8 +61,8 @@ patch '/memos/:id' do
 end
 
 post '/memos' do
-  title = Sanitize.fragment(params[:title])
-  content = Sanitize.fragment(params[:content])
+  title = params[:title]
+  content = params[:content]
 
   memos = get_memos(FILE_PATH)
   id = (memos.keys.map(&:to_i).max + 1).to_s
