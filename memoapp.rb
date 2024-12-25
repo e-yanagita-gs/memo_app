@@ -50,14 +50,18 @@ get '/memos/:id' do
 end
 
 patch '/memos/:id' do
-  title = Sanitize.fragment(params[:title])
-  content = Sanitize.fragment(params[:content])
-
   memos = get_memos(FILE_PATH)
-  memos[params[:id]] = { 'title' => title, 'content' => content }
-  set_memos(FILE_PATH, memos)
 
-  redirect "/memos/#{params[:id]}"
+  if memos.key?(params[:id])
+    title = params[:title]
+    content = params[:content]
+    memos[params[:id]] = { 'title' => title, 'content' => content }
+    set_memos(FILE_PATH, memos)
+    redirect "/memos/#{params[:id]}"
+  else
+    status 404
+    erb :not_found
+  end
 end
 
 post '/memos' do
@@ -75,9 +79,16 @@ end
 get '/memos/:id/edit' do
   memos = get_memos(FILE_PATH)
   @id = params[:id]
-  @title = memos[params[:id]]['title']
-  @content = memos[params[:id]]['content']
-  erb :edit
+  @memo = memos[@id]
+
+  if @memo
+    @title = memos[@id]['title']
+    @content = memos[@id]['content']
+    erb :edit
+  else
+    status 404
+    erb :not_found
+  end
 end
 
 delete '/memos/:id' do
