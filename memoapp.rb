@@ -65,7 +65,7 @@ post '/memos' do
   content = params[:content]
 
   memos = get_memos(FILE_PATH)
-  id = (memos.keys.map(&:to_i).max + 1).to_s
+  id = SecureRandom.uuid
   memos[id] = { 'title' => title, 'content' => content }
   set_memos(FILE_PATH, memos)
 
