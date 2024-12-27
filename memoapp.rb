@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sinatra'
+require 'sinatra/content_for'
 require 'sinatra/reloader'
 require 'puma'
 require 'json'
@@ -8,6 +9,8 @@ require 'cgi'
 require 'sanitize'
 
 FILE_PATH = 'public/memos.json'
+
+helpers Sinatra::ContentFor
 
 helpers do
   def h(text)
