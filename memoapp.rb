@@ -6,7 +6,6 @@ require 'sinatra/reloader'
 require 'puma'
 require 'json'
 require 'cgi'
-require 'sanitize'
 
 FILE_PATH = 'public/memos.json'
 

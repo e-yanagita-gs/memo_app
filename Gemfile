@@ -4,8 +4,6 @@ source 'https://rubygems.org'
 
 gem 'puma'
 gem 'rackup'
-gem 'redcarpet'
-gem 'sanitize'
 gem 'sinatra'
 gem 'sinatra-contrib'
 
