@@ -1,0 +1,11 @@
+<% content_for :header_action do %>
+  <a class="btn btn-secondary" style="width: 80px;" href="/memos/new">追加</a>
+<% end %>
+
+<ul>
+  <% @memos.each do |memo| %>
+    <li>
+      <a href="/memos/<%= memo["id"] %>"><%= h(memo["title"]) %></a>
+    </li>
+  <% end %>
+</ul>
