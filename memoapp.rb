@@ -3,11 +3,9 @@
 require 'sinatra'
 require 'sinatra/content_for'
 require 'sinatra/reloader'
+require 'pg'
 require 'puma'
-require 'json'
 require 'cgi'
-
-FILE_PATH = 'public/memos.json'
 
 helpers Sinatra::ContentFor
 
@@ -17,12 +15,35 @@ helpers do
   end
 end
 
-def get_memos(file_path)
-  File.open(file_path) { |f| JSON.parse(f.read) }
+def conn
+  @conn ||= PG.connect(dbname: 'memo_app')
 end
 
-def set_memos(file_path, memos)
-  File.open(file_path, 'w') { |f| f.write(memos.to_json) }
+configure do
+  result = conn.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
+  conn.exec('CREATE TABLE memos (id SERIAL PRIMARY KEY, title text, content text)') if result.values.empty?
+end
+
+def read_memos
+  conn.exec('SELECT * FROM memos')
+end
+
+def read_memo(id)
+  result = conn.exec_params('SELECT * FROM memos WHERE id = $1;', [id])
+  result.tuple_values(0)
+end
+
+def post_memo(title, content)
+  result = conn.exec_params('INSERT INTO memos (title, content) VALUES ($1, $2) RETURNING id;', [title, content])
+  result[0]['id']
+end
+
+def edit_memo(title, content, id)
+  conn.exec_params('UPDATE memos SET title = $1, content = $2 WHERE id = $3;', [title, content, id])
+end
+
+def delete_memo(id)
+  conn.exec_params('DELETE FROM memos WHERE id = $1;', [id])
 end
 
 get '/' do
@@ -34,16 +55,15 @@ get '/memos/new' do
 end
 
 get '/memos' do
-  @memos = get_memos(FILE_PATH)
+  @memos = read_memos
   erb :index
 end
 
 get '/memos/:id' do
-  memos = get_memos(FILE_PATH)
-  @memo = memos[params[:id]]
-  if @memo
-    @title = @memo['title']
-    @content = @memo['content']
+  memo = read_memo(params[:id])
+  if memo
+    @title = memo[1]
+    @content = memo[2]
     erb :show
   else
     status 404
@@ -52,13 +72,13 @@ get '/memos/:id' do
 end
 
 patch '/memos/:id' do
-  memos = get_memos(FILE_PATH)
+  memo = read_memo(params[:id])
 
-  if memos.key?(params[:id])
+  if memo
     title = params[:title]
     content = params[:content]
-    memos[params[:id]] = { 'title' => title, 'content' => content }
-    set_memos(FILE_PATH, memos)
+    id = params[:id]
+    edit_memo(title, content, id)
     redirect "/memos/#{params[:id]}"
   else
     status 404
@@ -69,23 +89,16 @@ end
 post '/memos' do
   title = params[:title]
   content = params[:content]
-
-  memos = get_memos(FILE_PATH)
-  id = SecureRandom.uuid
-  memos[id] = { 'title' => title, 'content' => content }
-  set_memos(FILE_PATH, memos)
-
-  redirect '/memos'
+  id = post_memo(title, content)
+  redirect "/memos/#{id}"
 end
 
 get '/memos/:id/edit' do
-  memos = get_memos(FILE_PATH)
-  @id = params[:id]
-  @memo = memos[@id]
+  memo = read_memo(params[:id])
 
-  if @memo
-    @title = memos[@id]['title']
-    @content = memos[@id]['content']
+  if memo
+    @title = memo[1]
+    @content = memo[2]
     erb :edit
   else
     status 404
@@ -94,10 +107,7 @@ get '/memos/:id/edit' do
 end
 
 delete '/memos/:id' do
-  memos = get_memos(FILE_PATH)
-  memos.delete(params[:id])
-  set_memos(FILE_PATH, memos)
-
+  delete_memo(params[:id])
   redirect '/memos'
 end
 
