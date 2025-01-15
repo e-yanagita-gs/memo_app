@@ -20,8 +20,7 @@ def conn
 end
 
 configure do
-  result = conn.exec("SELECT * FROM information_schema.tables WHERE table_name = 'memos'")
-  conn.exec('CREATE TABLE memos (id SERIAL PRIMARY KEY, title text, content text)') if result.values.empty?
+  conn.exec('CREATE TABLE IF NOT EXISTS memos (id SERIAL PRIMARY KEY, title text, content text)')
 end
 
 def read_memos
