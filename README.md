@@ -17,7 +17,15 @@ $ git clone https://github.com/e-yanagita-gs/memo_app.git
 $ cd memo_app
 $ bundle install
 ```
-3. アプリケーションを起動します
+3. データベースを作成します
+  PostgreSQLがインストールされている環境で、サーバーを起動し、以下のコマンドを実行してデータベースを作成してください。
+```sh
+$ psql -U postgres
+```
+```sql
+CREATE DATABASE memo_app;
+```
+4. アプリケーションを起動します
 ```sh
 $ bundle exec ruby memoapp.rb
 ```
