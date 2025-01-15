@@ -29,7 +29,7 @@ def read_memos
 end
 
 def read_memo(id)
-  result = conn.exec_params('SELECT * FROM memos WHERE id = $1;', [id])
+  result = conn.exec_params('SELECT * FROM memos WHERE id = $1 LIMIT 1;', [id])
   result.tuple_values(0)
 end
 
