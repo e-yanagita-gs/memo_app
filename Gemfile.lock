@@ -73,6 +73,7 @@ GEM
     parser (3.3.6.0)
       ast (~> 2.4.1)
       racc
+    pg (1.5.9)
     puma (6.5.0)
       nio4r (~> 2.0)
     racc (1.8.1)
@@ -93,7 +94,6 @@ GEM
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rainbow (3.1.1)
-    redcarpet (3.6.0)
     regexp_parser (2.9.3)
     rubocop (1.69.2)
       json (~> 2.3)
@@ -115,12 +115,6 @@ GEM
       rubocop-ast (>= 1.31.1, < 2.0)
     ruby-progressbar (1.13.0)
     ruby2_keywords (0.0.5)
-<<<<<<< HEAD
-=======
-    sanitize (6.1.3)
-      crass (~> 1.0.2)
-      nokogiri (>= 1.12.0)
->>>>>>> memo_app
     securerandom (0.4.0)
     sinatra (4.1.1)
       logger (>= 1.6.0)
@@ -154,16 +148,10 @@ PLATFORMS
 
 DEPENDENCIES
   erb_lint
-  json
+  pg
   puma
   rackup
-<<<<<<< HEAD
   rubocop-fjord
-=======
-  redcarpet
-  rubocop-fjord
-  sanitize
->>>>>>> memo_app
   sinatra
   sinatra-contrib
 

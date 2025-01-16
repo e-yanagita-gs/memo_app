@@ -1,6 +1,10 @@
 # メモアプリ
 このメモアプリは、ユーザーがメモを作成・編集・削除できるシンプルなウェブアプリケーションです。
 
+## 使用要件
+このメモアプリのデータの保管にはPostgreSQLを使用しています。
+PostgreSQLがインストールされていない場合は、公式サイトの手順に従ってインストールしてください。
+
 ## インストール方法
 以下の手順に従って、アプリをローカル環境でセットアップしてください。
 
@@ -13,7 +17,15 @@ $ git clone https://github.com/e-yanagita-gs/memo_app.git
 $ cd memo_app
 $ bundle install
 ```
-3. アプリケーションを起動します
+3. データベースを作成します
+  PostgreSQLがインストールされている環境で、サーバーを起動し、以下のコマンドを実行してデータベースを作成してください。
+```sh
+$ psql -U postgres
+```
+```sql
+CREATE DATABASE memo_app;
+```
+4. アプリケーションを起動します
 ```sh
 $ bundle exec ruby memoapp.rb
 ```
